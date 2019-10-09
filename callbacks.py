@@ -1,18 +1,14 @@
-from chat_functions import (
-    send_text_to_room,
-)
+from chat_functions import send_text_to_room
 from bot_commands import Command
-from nio import (
-    JoinError,
-)
+from nio import JoinError, RoomLeaveError
 from message_responses import Message
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
 class Callbacks(object):
-
     def __init__(self, client, store, config):
         """
         Args:
@@ -50,7 +46,7 @@ class Callbacks(object):
 
         # Process as message if in a public room without command prefix
         has_command_prefix = msg.startswith(self.command_prefix)
-        if not has_command_prefix and not room.is_group:
+        if not has_command_prefix:  # and not room.is_group:
             # General message listener
             message = Message(self.client, self.store, self.config, msg, room, event)
             await message.process()
@@ -60,7 +56,7 @@ class Callbacks(object):
         # treat it as a command
         if has_command_prefix:
             # Remove the command prefix
-            msg = msg[len(self.command_prefix):]
+            msg = msg[len(self.command_prefix) :]
 
         command = Command(self.client, self.store, self.config, msg, room, event)
         await command.process()
@@ -69,13 +65,32 @@ class Callbacks(object):
         """Callback for when an invite is received. Join the room specified in the invite"""
         logger.debug(f"Got invite to {room.room_id} from {event.sender}.")
 
+        # If user not whitelisted, try to reject for 3 times
+        if (self.config.invite_whitelist_enabled) and (
+            event.sender not in self.config.invite_whitelist
+        ):
+            for attempt in range(3):
+                result = await self.client.room_leave(room.room_id)
+                if type(result) == RoomLeaveError:
+                    logger.error(
+                        f"Error rejecting invite to room {room.room_id} (attempt %d): %s",
+                        attempt,
+                        result.message,
+                    )
+                else:
+                    logger.info(
+                        f"Reject invite to room {room.room_id}, {event.sender} not whitelisted."
+                    )
+                    return
+
         # Attempt to join 3 times before giving up
         for attempt in range(3):
             result = await self.client.join(room.room_id)
             if type(result) == JoinError:
                 logger.error(
                     f"Error joining room {room.room_id} (attempt %d): %s",
-                    attempt, result.message,
+                    attempt,
+                    result.message,
                 )
             else:
                 logger.info(f"Joined {room.room_id}")

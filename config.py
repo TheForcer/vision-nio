@@ -22,7 +22,9 @@ class Config(object):
             config = yaml.full_load(file_stream.read())
 
         # Logging setup
-        formatter = logging.Formatter('%(asctime)s | %(name)s [%(levelname)s] %(message)s')
+        formatter = logging.Formatter(
+            "%(asctime)s | %(name)s [%(levelname)s] %(message)s"
+        )
 
         log_dict = config.get("logging", {})
         log_level = log_dict.get("level", "INFO")
@@ -46,6 +48,27 @@ class Config(object):
         # Database setup
         database_dict = config.get("database", {})
         self.database_filepath = database_dict.get("filepath")
+
+        # Whitelist setups
+        self.invite_whitelist = config.get("invite_whitelist")
+        if not type(self.invite_whitelist) == list:
+            raise ConfigError(
+                "Leave the list empty if the invite whitelist should be disabled."
+            )
+        elif not self.invite_whitelist:
+            self.invite_whitelist_enabled = False
+        else:
+            self.invite_whitelist_enabled = True
+
+        self.admin_whitelist = config.get("admin_whitelist")
+        if not type(self.admin_whitelist) == list:
+            raise ConfigError(
+                "Leave the list empty if the admin whitelist should be disabled."
+            )
+        elif not self.admin_whitelist:
+            self.admin_whitelist_enabled = False
+        else:
+            self.admin_whitelist_enabled = True
 
         # Matrix bot account setup
         matrix = config.get("matrix", {})

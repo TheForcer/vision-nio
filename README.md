@@ -1,16 +1,30 @@
-# Nio Template
+# Vision
 
-A template for creating bots with
-[matrix-nio](https://github.com/poljar/matrix-nio). The documentation for
-matrix-nio can be found
-[here](https://matrix-nio.readthedocs.io/en/latest/nio.html).
+A matrix bot with some cool functionality, which is based on [matrix-nio](https://github.com/poljar/matrix-nio) and the corresponding template by [anoadragon453/nio-template](https://github.com/anoadragon453/nio-template).
 
-## Projects using nio-template
+## Installation
 
-* [anoadragon453/msc-chatbot](https://github.com/anoadragon453/msc-chatbot) - A matrix bot for matrix spec proposals
+Clone the repo to your preferred location:
+```sh
+git clone https://github.com/theforcer/vision-nio
+cd vision-nio
+```
 
-Want your project listed here? [Edit this
-doc!](https://github.com/anoadragon453/nio-template/edit/master/README.md)
+Copy and rename the config file.
+For basic functionality the matrix credentials are required.
+```sh
+cp config/sample.config.yaml config/config.yaml
+nano/vim/pico config/config.yaml
+```
+
+Start up the bot/container with docker-compose (add -d if you want the process to run in the background):
+```sh
+docker-compose up
+```
+
+## Usage
+
+TODO
 
 ## Project structure
 
@@ -111,8 +125,3 @@ The sample configuration file. People running your bot should be advised to
 copy this file to `config.yaml`, then edit it according to their needs. Be sure
 never to check the edited `config.yaml` into source control since it'll likely
 contain sensitive details like an access token!
-
-## Questions?
-
-Any questions? Ask in
-[#nio-template:amorgan.xyz](https://matrix.to/#/!vmWBOsOkoOtVHMzZgN:amorgan.xyz?via=amorgan.xyz)!

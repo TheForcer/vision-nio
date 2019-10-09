@@ -4,7 +4,6 @@ logger = logging.getLogger(__name__)
 
 
 class Message(object):
-
     def __init__(self, client, store, config, message_content, room, event):
         """Initialize a new Message
 

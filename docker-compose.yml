@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  vision:
+    build: .
+    container_name: vision
+    restart: unless-stopped
+    volumes:
+      - ./config/:/opt/config/
+      - ./data/:/opt/data/

@@ -2,13 +2,7 @@
 
 import logging
 import asyncio
-from nio import (
-    AsyncClient,
-    AsyncClientConfig,
-    RoomMessageText,
-    InviteEvent,
-    SyncError,
-)
+from nio import AsyncClient, AsyncClientConfig, RoomMessageText, InviteEvent, SyncError
 from callbacks import Callbacks
 from config import Config
 from storage import Storage
@@ -18,16 +12,13 @@ logger = logging.getLogger(__name__)
 
 async def main():
     # Read config file
-    config = Config("config.yaml")
+    config = Config("/opt/config/config.yaml")
 
     # Configure the database
     store = Storage(config.database_filepath)
 
     # Configuration options for the AsyncClient
-    client_config = AsyncClientConfig(
-        max_limit_exceeded=0,
-        max_timeouts=0,
-    )
+    client_config = AsyncClientConfig(max_limit_exceeded=0, max_timeouts=0)
 
     # Initialize the matrix client
     client = AsyncClient(
@@ -62,5 +53,6 @@ async def main():
         token = sync_response.next_batch
         if token:
             store.save_sync_token(token)
+
 
 asyncio.get_event_loop().run_until_complete(main())

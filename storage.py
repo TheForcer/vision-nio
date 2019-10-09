@@ -34,10 +34,12 @@ class Storage(object):
         self.cursor = self.conn.cursor()
 
         # Sync token table
-        self.cursor.execute("CREATE TABLE sync_token ("
-                            "dedupe_id INTEGER PRIMARY KEY, "
-                            "token TEXT NOT NULL"
-                            ")")
+        self.cursor.execute(
+            "CREATE TABLE sync_token ("
+            "dedupe_id INTEGER PRIMARY KEY, "
+            "token TEXT NOT NULL"
+            ")"
+        )
 
         logger.info("Database setup complete")
 
@@ -71,6 +73,8 @@ class Storage(object):
         Args:
             token (str): A next_batch token as part of a sync response
         """
-        self.cursor.execute("INSERT OR REPLACE INTO sync_token "
-                            "(dedupe_id, token) VALUES (1, ?)", (token,))
+        self.cursor.execute(
+            "INSERT OR REPLACE INTO sync_token " "(dedupe_id, token) VALUES (1, ?)",
+            (token,),
+        )
         self.conn.commit()

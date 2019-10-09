@@ -1,18 +1,12 @@
 import logging
-from nio import (
-    SendRetryError
-)
+from nio import SendRetryError
 from markdown import markdown
 
 logger = logging.getLogger(__name__)
 
 
 async def send_text_to_room(
-    client,
-    room_id,
-    message,
-    notice=True,
-    markdown_convert=True
+    client, room_id, message, notice=True, markdown_convert=True
 ):
     """Send text to a matrix room
 
@@ -32,21 +26,13 @@ async def send_text_to_room(
     # Determine whether to ping room members or not
     msgtype = "m.notice" if notice else "m.text"
 
-    content = {
-        "msgtype": msgtype,
-        "format": "org.matrix.custom.html",
-        "body": message,
-    }
+    content = {"msgtype": msgtype, "format": "org.matrix.custom.html", "body": message}
 
     if markdown_convert:
         content["formatted_body"] = markdown(message)
 
     try:
-        await client.room_send(
-            room_id,
-            "m.room.message",
-            content,
-        )
+        await client.room_send(room_id, "m.room.message", content)
     except SendRetryError:
         logger.exception(f"Unable to send message response to {room_id}")
 

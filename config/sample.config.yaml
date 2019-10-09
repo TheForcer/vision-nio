@@ -3,7 +3,12 @@
 # Default values are shown
 
 # The string to prefix messages with to talk to the bot in group chats
-command_prefix: "!c"
+command_prefix: "!v"
+
+# Only accept invites from these matrix IDs. Leave empty to allow anyone.
+invite_whitelist: []
+# Only accept specific commands from these matrix IDs. Leave empty to allow anyone.
+admin_whitelist: []
 
 # Options for connecting to the bot's Matrix account
 matrix:
@@ -18,7 +23,7 @@ matrix:
 
 database:
   # The path to the database
-  filepath: "bot.db"
+  filepath: "/opt/data/bot.db"
 
 # Logging setup
 logging:
@@ -30,7 +35,7 @@ logging:
     # Whether logging to a file is enabled
     enabled: false
     # The path to the file to log to. May be relative or absolute
-    filepath: bot.log
+    filepath: "/opt/data/bot.log"
   # Configure logging to the console output
   console_logging:
     # Whether logging to the console is enabled

@@ -24,7 +24,8 @@ docker-compose up
 
 ## Usage
 
-TODO
+### PiHole
+The PiHole module is used to get a quick overlook of the total amount of (blocked) DNS queries. Configure the respective section in the config file with your PiHole's IP/FQDN, and with a quick ```!v ads``` you'll get the information you need.
 
 ## Project structure
 

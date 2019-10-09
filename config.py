@@ -90,3 +90,7 @@ class Config(object):
             raise ConfigError("matrix.homeserver_url is a required field")
 
         self.command_prefix = config.get("command_prefix", "!c") + " "
+
+        # PiHole Setup
+        pihole = config.get("pihole", {})
+        self.pihole_url = pihole.get("url")

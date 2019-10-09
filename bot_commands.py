@@ -1,4 +1,6 @@
 from chat_functions import send_text_to_room
+import requests
+import json
 
 
 class Command(object):
@@ -21,6 +23,7 @@ class Command(object):
         self.client = client
         self.store = store
         self.command = command
+        self.config = config
         self.room = room
         self.event = event
         self.args = self.command.split()[1:]
@@ -31,6 +34,8 @@ class Command(object):
             await self._echo()
         elif self.command.startswith("help"):
             await self._show_help()
+        elif self.command.startswith("ads"):
+            await self._pihole_stats()
         else:
             await self._unknown_command()
 
@@ -58,9 +63,26 @@ class Command(object):
             text = "Unknown help topic!"
         await send_text_to_room(self.client, self.room.room_id, text)
 
+    async def _pihole_stats(self):
+        """Echo back some PiHole stats"""
+        url = self.config.pihole_url + "/admin/api.php"
+        json_data = json.loads(requests.request("GET", url, data="", headers="").text)
+        response = (
+            "**PiHole Statistiken**:<br>Heutige DNS Anfragen: **"
+            + str(json_data["dns_queries_today"])
+            + "**<br>Davon geblockt: **"
+            + str(json_data["ads_blocked_today"])
+            + "** / **"
+            + str(round(json_data["ads_percentage_today"], 2))
+            + "**%<br>Anzahl an Clients: **"
+            + str(json_data["unique_clients"])
+            + "**"
+        )
+        await send_text_to_room(self.client, self.room.room_id, response)
+
     async def _unknown_command(self):
         await send_text_to_room(
             self.client,
             self.room.room_id,
-            f"Unknown command '{self.command}'. Try the 'help' command for more information.",
+            f"Ich kenne '{self.command}' leider nicht. Versuche doch einen anderen Befehl.",
         )

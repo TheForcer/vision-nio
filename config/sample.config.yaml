@@ -40,3 +40,8 @@ logging:
   console_logging:
     # Whether logging to the console is enabled
     enabled: true
+
+# PiHole setup
+pihole:
+  # The URL/IP of the PiHole to connect to
+  url: https://pihole.vertrauringe.com

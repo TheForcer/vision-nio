@@ -27,6 +27,9 @@ docker-compose up
 ### PiHole
 The PiHole module is used to get a quick overlook of the total amount of (blocked) DNS queries. Configure the respective section in the config file with your PiHole's IP/FQDN, and with a quick ```!v ads``` you'll get the information you need.
 
+### UptimeRobot
+After supplying a (read-only) API Key from UptimeRobot in the settings file, the bot will scrape all your available monitors and output the latest Response Time (in ms) and the duration since the latest status change for each of the monitors (symbolized by ✅ and ❌ also :D). The command for that is ```!v uptime```
+
 ## Project structure
 
 ### `main.py`

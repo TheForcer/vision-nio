@@ -94,3 +94,9 @@ class Config(object):
         # PiHole Setup
         pihole = config.get("pihole", {})
         self.pihole_url = pihole.get("url")
+
+        # UptimeRobot Setup
+        utrobot = config.get("uptimerobot", {})
+        self.utrobot_apikey = utrobot.get("apikey")
+        if not len(self.utrobot_apikey) == 33:
+            raise ConfigError("uptimerobot.apikey has the wrong length")

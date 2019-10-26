@@ -6,6 +6,8 @@
 
 # Docker Dev Deployment
 docker-compose.dev.yml
+Dockerfile.base
+Dockerfile.dev
 
 # Python virtualenv environment folders
 env/

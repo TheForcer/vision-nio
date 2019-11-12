@@ -70,13 +70,13 @@ class Command(object):
         url = self.config.pihole_url + "/admin/api.php"
         json_data = json.loads(requests.request("GET", url, data="", headers="").text)
         response = (
-            "**PiHole Statistiken** 🖥️<br>Heutige DNS Anfragen: **"
+            "**PiHole Stats** 🖥️<br>Today's DNS queries: **"
             + str(json_data["dns_queries_today"])
-            + "**<br>Davon geblockt: **"
+            + "**<br>Blocked: **"
             + str(json_data["ads_blocked_today"])
             + "** / **"
             + str(round(json_data["ads_percentage_today"], 2))
-            + "**%<br>Anzahl an Clients: **"
+            + "**%<br>Client count: **"
             + str(json_data["unique_clients"])
             + "**"
         )
@@ -96,9 +96,9 @@ class Command(object):
             requests.request("POST", url, data=payload, headers=headers).text
         )
         response = (
-            "**Uptime Statistiken für "
+            "**Uptime Stats for "
             + str(json_data["pagination"]["total"])
-            + " Services:** <br><br>**Response Time**:"
+            + " services:** <br><br>**Response Time**:"
         )
         for monitor in json_data["monitors"]:
             response = (
@@ -109,32 +109,32 @@ class Command(object):
                 + str(monitor["response_times"][0]["value"])
                 + "ms"
             )
-        response = response + "<br><br>**Aktueller Status**: "
+        response = response + "<br><br>**Current Status**: "
         for monitor in json_data["monitors"]:
             if monitor["logs"][0]["type"] == 2:
                 response = (
                     response
                     + "<br>- "
                     + monitor["friendly_name"]
-                    + ": ✅ seit "
+                    + ": ✅ for "
                     + str(round((monitor["logs"][0]["duration"]) / 60 / 60 / 24, 2))
-                    + " Tagen"
+                    + " days"
                 )
             elif monitor["logs"][0]["type"] == 1:
                 response = (
                     response
                     + "<br>- "
                     + monitor["friendly_name"]
-                    + ": ❌ seit "
+                    + ": ❌ for "
                     + str(round((monitor["logs"][0]["duration"]) / 60 / 60 / 24, 2))
-                    + " Tagen"
+                    + " days"
                 )
             else:
                 response = (
                     response
                     + "<br>- "
                     + monitor["friendly_name"]
-                    + ": ❓️ Pausiert/Neustart"
+                    + ": ❓️ paused/rebooting"
                 )
         await send_text_to_room(self.client, self.room.room_id, response)
 
@@ -142,5 +142,5 @@ class Command(object):
         await send_text_to_room(
             self.client,
             self.room.room_id,
-            f"Ich kenne '{self.command}' leider nicht. Versuche doch einen anderen Befehl.",
+            f"I don't know '{self.command}'. Please try again.",
         )

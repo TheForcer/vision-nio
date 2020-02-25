@@ -1,4 +1,5 @@
 from chat_functions import send_text_to_room
+from adguardhome import AdGuardHome
 import httpx
 import json
 
@@ -35,7 +36,7 @@ class Command(object):
         elif self.command.startswith("help"):
             await self._show_help()
         elif self.command.startswith("ads"):
-            await self._pihole_stats()
+            await self._adguard_stats()
         elif self.command.startswith("uptime"):
             await self._utrobot_stats()
         else:
@@ -65,21 +66,27 @@ class Command(object):
             text = "Unknown help topic!"
         await send_text_to_room(self.client, self.room.room_id, text)
 
-    async def _pihole_stats(self):
-        """Echo back some PiHole stats"""
-        url = self.config.pihole_url + "/admin/api.php"
-        json_data = json.loads(httpx.request("GET", url, data="", headers="").text)
-        response = (
-            "**PiHole Stats** 🖥️<br>Today's DNS queries: **"
-            + str(json_data["dns_queries_today"])
-            + "**<br>Blocked: **"
-            + str(json_data["ads_blocked_today"])
-            + "** / **"
-            + str(round(json_data["ads_percentage_today"], 2))
-            + "**%<br>Client count: **"
-            + str(json_data["unique_clients"])
-            + "**"
-        )
+    async def _adguard_stats(self):
+        """Echo some stats from your AdGuardHome instance"""
+        # Check if event.sender is in whitelist, else cancel command
+        if (self.config.admin_whitelist_enabled) and (
+            self.event.sender not in self.config.admin_whitelist
+        ):
+            return
+        async with AdGuardHome(
+            self.config.adguard_url,
+            port=self.config.adguard_port,
+            tls=self.config.adguard_tls,
+            username=self.config.adguard_username,
+            password=self.config.adguard_password,
+        ) as adguard:
+            active = await adguard.protection_enabled()
+            active = "✔" if active else "❌"
+            version = await adguard.version()
+            queries = await adguard.stats.dns_queries()
+            response_time = await adguard.stats.avg_processing_time()
+
+        response = f"AdGuard Home version {version}<br>Protection enabled: {active}<br>DNS queries today: {queries}<br>DNS response time: {response_time} ms"
         await send_text_to_room(self.client, self.room.room_id, response)
 
     async def _utrobot_stats(self):

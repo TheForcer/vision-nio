@@ -11,7 +11,7 @@ cd vision-nio
 ```
 
 Copy and rename the config file.
-For basic functionality the matrix credentials are required.
+For basic functionality the matrix credentials of your bot account are required.
 ```sh
 cp config/sample.config.yaml config/config.yaml
 nano/vim/pico config/config.yaml
@@ -24,11 +24,12 @@ docker-compose up
 
 ## Usage
 
-### PiHole
-The PiHole module is used to get a quick overlook of the total amount of (blocked) DNS queries. Configure the respective section in the config file with your PiHole's IP/FQDN, and with a quick ```!v ads``` you'll get the information you need.
+### AdGuard Home
+The AdGuard Home module is used to get a quick overlook of the total amount of DNS queries, DNS response times and so on. Configure the respective section in the config file with your instance data/credentials, and with a quick ```!v ads``` you'll get the information you need.
 
-### UptimeRobot
+### UptimeRobot (planned to be replaced by a StatPing module)
 After supplying a (read-only) API Key from UptimeRobot in the settings file, the bot will scrape all your available monitors and output the latest Response Time (in ms) and the duration since the latest status change for each of the monitors (symbolized by ✅ and ❌ also :D). The command for that is ```!v uptime```
+
 
 ## Project structure
 
@@ -47,9 +48,8 @@ client provides this token the next time it syncs (using the `since` parameter
 on the `AsyncClient.sync` method), the homeserver will only return new event
 *since* those specified by the given token.
 
-This token is saved in the database created by `storage.py` so even if the bot
-quits unexpectantly, it will continue syncing where it left off next time it
-is started.
+This token is saved and provided again automatically by using the
+`client.sync_forever(...)` method.
 
 ### `config.py`
 
@@ -68,19 +68,6 @@ to put or retrieve data from it. Table definitions should be specified in
 `_initial_setup`, and any necessary migrations should be put in
 `_run_migrations`. There's currently no defined method for how migrations
 should work though.
-
-The `sync_token` table should be left in tact so that the bot can save its
-progress when syncing events from the homeserver.
-
-### `sync_token.py`
-
-A simple class that can load and save a sync token to/from the database.
-
-A `SyncToken` is an instance of a sync token, which is simply a string
-retrieved from a matrix homeserver when querying the `/sync` endpoint (which
-clients use to retrieve new events). It is given to the next call of the
-`/sync` endpoint in order to specify the starting point in the event timeline
-you would like to receive messages from.
 
 ### `callbacks.py`
 
@@ -137,4 +124,4 @@ defined for when a error is found while the config file is being processed.
 The sample configuration file. People running your bot should be advised to
 copy this file to `config.yaml`, then edit it according to their needs. Be sure
 never to check the edited `config.yaml` into source control since it'll likely
-contain sensitive details like an access token!
+contain sensitive details like passwords!

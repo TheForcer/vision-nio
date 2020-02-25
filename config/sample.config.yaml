@@ -50,3 +50,12 @@ logging:
   console_logging:
     # Whether logging to the console is enabled
     enabled: true
+
+# AdGuard Home Setup
+adguard:
+  # URL or IP of your instance
+  url: ""
+  port: 3000
+  tls: True
+  username: "admin"
+  password: ""

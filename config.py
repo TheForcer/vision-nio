@@ -107,6 +107,13 @@ class Config(object):
         else:
             self.admin_whitelist_enabled = True
 
+        # AdGuard Home Setup
+        self.adguard_url = self._get_cfg(["adguard", "url"], required=False)
+        self.adguard_port = self._get_cfg(["adguard", "port"], default=3000)
+        self.adguard_tls = self._get_cfg(["adguard", "tls"], default=False)
+        self.adguard_username = self._get_cfg(["adguard", "username"], required=False)
+        self.adguard_password = self._get_cfg(["adguard", "password"], required=False)
+
         self.command_prefix = self._get_cfg(["command_prefix"], default="!c") + " "
 
     def _get_cfg(

@@ -5,25 +5,35 @@
 # The string to prefix messages with to talk to the bot in group chats
 command_prefix: "!v"
 
-# Only accept invites from these matrix IDs. Leave empty to allow anyone.
-invite_whitelist: []
-# Only accept specific commands from these matrix IDs. Leave empty to allow anyone.
-admin_whitelist: []
-
 # Options for connecting to the bot's Matrix account
 matrix:
   # The Matrix User ID of the bot account
   user_id: "@bot:example.com"
-  # The access token of the bot account
-  access_token: ""
-  # The device ID given on login
-  device_id: ABCDEFGHIJ
+  # Matrix account password
+  user_password: ""
   # The URL of the homeserver to connect to
   homeserver_url: https://example.com
+  # The device ID that is **non pre-existing** device
+  # If this device ID already exists, messages will be dropped silently in encrypted rooms
+  device_id: ABCDEFGHIJ
+  # What to name the logged in device
+  device_name: Vision-Bot
+  # Only accept invites from these matrix IDs. Leave empty to allow anyone.
+  invite_whitelist: ["@user:example.com"]
+  # Only accept specific commands from these matrix IDs. Leave empty to allow anyone.
+  admin_whitelist: ["@user:example.com"]
+  # End-to-end encryption support
+  #
+  # Enabling this requires installing the matrix-nio encryption dependencies
+  # as described here: https://github.com/poljar/matrix-nio#installation
+  enable_encryption: true
 
-database:
+storage:
   # The path to the database
-  filepath: "/opt/data/bot.db"
+  database_filepath: "/opt/data/bot.db"
+  # The path to a directory for internal bot storage
+  # containing encryption keys, sync tokens, etc.
+  store_filepath: "/opt/data/store"
 
 # Logging setup
 logging:
@@ -40,13 +50,3 @@ logging:
   console_logging:
     # Whether logging to the console is enabled
     enabled: true
-
-# PiHole setup
-pihole:
-  # The URL/IP of the PiHole to connect to
-  url: http://192.168.1.1
-
-uptimerobot:
-  # Your UptimeRobot API key
-  # For now the Read-Only key is sufficient
-  apikey: "xxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx"

@@ -1,5 +1,5 @@
 from chat_functions import send_text_to_room
-import requests
+import httpx
 import json
 
 
@@ -68,7 +68,7 @@ class Command(object):
     async def _pihole_stats(self):
         """Echo back some PiHole stats"""
         url = self.config.pihole_url + "/admin/api.php"
-        json_data = json.loads(requests.request("GET", url, data="", headers="").text)
+        json_data = json.loads(httpx.request("GET", url, data="", headers="").text)
         response = (
             "**PiHole Stats** 🖥️<br>Today's DNS queries: **"
             + str(json_data["dns_queries_today"])
@@ -93,7 +93,7 @@ class Command(object):
         }
         url = "https://api.uptimerobot.com/v2/getMonitors"
         json_data = json.loads(
-            requests.request("POST", url, data=payload, headers=headers).text
+            httpx.request("POST", url, data=payload, headers=headers).text
         )
         response = (
             "**Uptime Stats for "

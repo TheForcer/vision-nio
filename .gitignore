@@ -17,6 +17,7 @@ env3/
 # Bot local files
 *.log
 *.db
+/data
 
 # Config file
 config.yaml

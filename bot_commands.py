@@ -77,7 +77,8 @@ class Command(object):
         if (self.config.admin_whitelist_enabled) and (
             self.event.sender not in self.config.admin_whitelist
         ):
-            self.not_allowed()
+            await self.not_allowed()
+            return
         async with AdGuardHome(
             self.config.adguard_url,
             port=self.config.adguard_port,

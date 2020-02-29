@@ -59,8 +59,8 @@ class Command(object):
                 "Hello, I am a bot made with matrix-nio! Use `help commands` to view "
                 "available commands."
             )
-        await send_text_to_room(self.client, self.room.room_id, text)
-        return
+            await send_text_to_room(self.client, self.room.room_id, text)
+            return
 
         topic = self.args[0]
         if topic == "rules":

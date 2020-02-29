@@ -85,7 +85,7 @@ class Command(object):
             version = await adguard.version()
             queries = await adguard.stats.dns_queries()
             blocked_queries = await adguard.stats.blocked_filtering()
-            blocked_percentage = await adguard.stats.blocked_percentage()
+            blocked_percentage = await adguard.stats.blocked_percentage().round(2)
             response_time = await adguard.stats.avg_processing_time()
 
         response = f"AdGuard Home version {version}<br>Protection enabled: {active}<br>DNS queries today: {queries}<br>Blocked queries: {blocked_queries} / {blocked_percentage} %<br>DNS response time: {response_time} ms"

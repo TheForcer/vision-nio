@@ -42,6 +42,11 @@ class Command(object):
         else:
             await self._unknown_command()
 
+    async def not_allowed(self):
+        """Send message if user is not allowed to execute this command."""
+        text = "I'm sorry, you are not allowed to execute this command."
+        await send_text_to_room(self.client, self.room.room_id, text)
+
     async def _echo(self):
         """Echo back the command's arguments"""
         response = " ".join(self.args)
@@ -54,8 +59,8 @@ class Command(object):
                 "Hello, I am a bot made with matrix-nio! Use `help commands` to view "
                 "available commands."
             )
-            await send_text_to_room(self.client, self.room.room_id, text)
-            return
+        await send_text_to_room(self.client, self.room.room_id, text)
+        return
 
         topic = self.args[0]
         if topic == "rules":
@@ -72,7 +77,7 @@ class Command(object):
         if (self.config.admin_whitelist_enabled) and (
             self.event.sender not in self.config.admin_whitelist
         ):
-            return
+            self.not_allowed()
         async with AdGuardHome(
             self.config.adguard_url,
             port=self.config.adguard_port,

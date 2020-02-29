@@ -88,7 +88,7 @@ class Command(object):
             blocked_percentage = await adguard.stats.blocked_percentage()
             response_time = await adguard.stats.avg_processing_time()
 
-        response = f"AdGuard Home version {version}<br>Protection enabled: {active}<br>DNS queries today: {queries}<br>Blocked queries: {blocked_queries} / {blocked_percentage.round(2)} %<br>DNS response time: {response_time} ms"
+        response = f"AdGuard Home version {version}<br>Protection enabled: {active}<br>DNS queries today: {queries}<br>Blocked queries: {blocked_queries} / {round(blocked_percentage, 2)} %<br>DNS response time: {response_time} ms"
         await send_text_to_room(self.client, self.room.room_id, response)
 
     async def _utrobot_stats(self):

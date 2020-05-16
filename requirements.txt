@@ -5,4 +5,4 @@ Markdown>=3.1.1
 PyYAML>=5.1.2
 httpx>=0.11.1
 pytz==2019.3
-adguardhome>=0.4.1
+adguardhome>=0.4.2

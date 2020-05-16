@@ -37,4 +37,3 @@ async def send_text_to_room(
         )
     except SendRetryError:
         logger.exception(f"Unable to send message response to {room_id}")
-
